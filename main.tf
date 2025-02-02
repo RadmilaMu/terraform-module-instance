@@ -2,13 +2,12 @@ provider "aws" {
   region = "us-east-2"
 }
 
-
-data "aws_ami" "amazon_linux" {
+data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"] 
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   filter {
@@ -16,13 +15,15 @@ data "aws_ami" "amazon_linux" {
     values = ["hvm"]
   }
 
-  owners = ["137112412989"] 
+  owners = ["099720109477"] 
 }
 
-resource "aws_instance" "web1" {
-  ami           = data.aws_ami.amazon_linux.id
+
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   user_data = file("apache.sh")
+
 
   tags = {
     Name = var.instance_name
